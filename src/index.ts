@@ -18,6 +18,10 @@ const defaultErrorHeaders = {
   "cache-control": "public, s-maxage=60",
 };
 
+app.get("/", async (c) => {
+  return c.redirect("https://blog.utgw.net/entry/patchrss");
+});
+
 app.get("/rss", async (c) => {
   const { url: urlFromQuery } = c.req.query();
   if (!urlFromQuery) {
