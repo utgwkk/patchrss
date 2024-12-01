@@ -6,7 +6,7 @@ import xml2js from "xml2js";
 const app = new Hono();
 
 const rssParser = new RSSParser({
-  timeout: 5000,
+  timeout: Number(process.env.RSS_PARSER_TIMEOUT_MSEC || 5000),
   headers: {
     "user-agent": "rsspatch (+https://rsspatch.utgw.net/)",
   },
@@ -137,6 +137,6 @@ serve({
   fetch: app.fetch,
   port,
   serverOptions: {
-    requestTimeout: 10000,
+    requestTimeout: Number(process.env.HONO_REQUEST_TIMEOUT_MSEC || 10000),
   },
 });
