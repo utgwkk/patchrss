@@ -1,2 +1,8 @@
-# rsspatch
-Patch broken RSS feed
+```
+npm install
+npm run dev
+```
+
+```
+open http://localhost:3000
+```
