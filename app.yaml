@@ -5,5 +5,4 @@ handlers:
     script: auto
     secure: always
     redirect_http_response_code: 301
-env_variables:
-  PORT: 8080
+
