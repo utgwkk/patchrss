@@ -71,7 +71,7 @@ const buildPatchedRSS = (
         "xmlns:atom": "http://www.w3.org/2005/Atom",
       } as Record<string, any>,
       channel: {
-        title: feed.title ? `${feed.generator} (patched)` : undefined,
+        title: feed.title ? `${feed.title} (patched)` : undefined,
         link: isValidUrl(feed.link)
           ? feed.link
           : assumeRSSLinkByOriginalUrl(originalUrl),
