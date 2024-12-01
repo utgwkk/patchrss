@@ -1,6 +1,10 @@
 runtime: nodejs20
 
 handlers:
+  - url: /favicon.ico
+    static_files: public/favicon.ico
+    upload: public/favicon.ico
+
   - url: /.*
     script: auto
     secure: always
