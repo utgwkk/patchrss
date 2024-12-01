@@ -4,6 +4,8 @@ import RSSParser from "rss-parser";
 import xml2js from "xml2js";
 
 const app = new Hono();
+const port = Number(process.env.PORT || 3000);
+const patchRssHost = process.env.PATCHRSS_HOST || "localhost:3000";
 
 const rssParser = new RSSParser({
   timeout: Number(process.env.RSS_PARSER_TIMEOUT_MSEC || 5000),
@@ -29,6 +31,12 @@ app.get("/rss", async (c) => {
     url = new URL(urlFromQuery);
   } catch (ex) {
     return c.text(`invalid url: ${urlFromQuery}`, 400, {
+      ...defaultErrorHeaders,
+    });
+  }
+
+  if (url.host === patchRssHost) {
+    return c.text("request infinite loop detected", 400, {
       ...defaultErrorHeaders,
     });
   }
@@ -130,7 +138,6 @@ const assumeRSSLinkByOriginalUrl = (originalUrl: string) => {
   return originalUrl;
 };
 
-const port = Number(process.env.PORT || 3000);
 console.log(`Server is running on http://localhost:${port}`);
 
 serve({
