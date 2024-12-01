@@ -10,7 +10,7 @@ const patchRssHost = process.env.PATCHRSS_HOST || "localhost:3000";
 const rssParser = new RSSParser({
   timeout: Number(process.env.RSS_PARSER_TIMEOUT_MSEC || 5000),
   headers: {
-    "user-agent": "rsspatch (+https://rsspatch.utgw.net/)",
+    "user-agent": "rsspatch (+kiki@utgw.net)",
   },
 });
 
