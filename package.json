@@ -8,6 +8,9 @@
     "@hono/node-server": "^1.13.7",
     "hono": "^4.6.12"
   },
+  "engines": {
+    "node": "^20.18.1"
+  },
   "devDependencies": {
     "@types/node": "^20.11.17",
     "tsx": "^4.7.1"
