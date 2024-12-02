@@ -80,8 +80,15 @@ app.get("/rss", async (c) => {
     contentType += "; charset=utf-8";
   }
 
-  const feed = await rssParser.parseString(await fetchResp.text());
-  const patchedFeedStr = buildPatchedRSS(url.toString(), feed);
+  let patchedFeedStr: string;
+  try {
+    const feed = await rssParser.parseString(await fetchResp.text());
+    patchedFeedStr = buildPatchedRSS(url.toString(), feed);
+  } catch (ex) {
+    return c.text("The returned response is not a valid RSS", 400, {
+      ...defaultErrorHeaders,
+    });
+  }
 
   return c.text(patchedFeedStr, 200, {
     "content-type": contentType,
