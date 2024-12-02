@@ -11,6 +11,8 @@
     "@types/xml2js": "^0.4.14",
     "fast-content-type-parse": "^2.0.0",
     "hono": "^4.6.12",
+    "node-fetch": "^3.3.2",
+    "request-filtering-agent": "^2.0.1",
     "rss-parser": "^3.13.0",
     "xml2js": "^0.6.2"
   },

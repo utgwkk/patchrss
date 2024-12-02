@@ -4,6 +4,8 @@ import { Hono } from "hono";
 import type { StatusCode } from "hono/utils/http-status";
 import RSSParser from "rss-parser";
 import xml2js from "xml2js";
+import fetch, { Response } from "node-fetch";
+import { useAgent } from "request-filtering-agent";
 
 const app = new Hono();
 const port = Number(process.env.PORT || 3000);
@@ -48,13 +50,23 @@ app.get("/rss", async (c) => {
     });
   }
 
-  const fetchResp = await fetch(url.toString(), {
-    method: "GET",
-    redirect: "follow",
-    headers: {
-      "user-agent": "patchrss (+https://blog.utgw.net/entry/patchrss)",
-    },
-  });
+  let fetchResp: Response;
+  try {
+    fetchResp = await fetch(url.toString(), {
+      method: "GET",
+      redirect: "follow",
+      headers: {
+        "user-agent": "patchrss (+https://blog.utgw.net/entry/patchrss)",
+      },
+      agent: useAgent(url.toString()),
+    });
+  } catch (ex) {
+    if (!(ex instanceof Error && ex.message.startsWith("DNS lookup"))) {
+      throw ex;
+    }
+    return c.text("Request blocked", 403, { ...defaultErrorHeaders });
+  }
+
   if (!fetchResp.ok) {
     return c.text(
       `Not ok response returned: ${fetchResp.statusText}`,
