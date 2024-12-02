@@ -1,5 +1,7 @@
 import { serve } from "@hono/node-server";
+import fastContentTypeParse from "fast-content-type-parse";
 import { Hono } from "hono";
+import type { StatusCode } from "hono/utils/http-status";
 import RSSParser from "rss-parser";
 import xml2js from "xml2js";
 
@@ -51,11 +53,38 @@ app.get("/rss", async (c) => {
     });
   }
 
-  const feed = await rssParser.parseURL(url.toString());
+  const fetchResp = await fetch(url.toString(), {
+    method: "GET",
+    redirect: "follow",
+    headers: {
+      "user-agent": "patchrss (+https://blog.utgw.net/entry/patchrss)",
+    },
+  });
+  if (!fetchResp.ok) {
+    return c.text(
+      `Not ok response returned: ${fetchResp.statusText}`,
+      fetchResp.status as StatusCode,
+      {
+        ...defaultErrorHeaders,
+      }
+    );
+  }
+  let contentType = "application/rss+xml";
+  const parsedContentType = fastContentTypeParse.safeParse(
+    fetchResp.headers.get("content-type") ??
+      "application/rss+xml; charset=utf-8"
+  );
+  if (parsedContentType.parameters.charset) {
+    contentType += `; charset=${parsedContentType.parameters.charset}`;
+  } else {
+    contentType += "; charset=utf-8";
+  }
+
+  const feed = await rssParser.parseString(await fetchResp.text());
   const patchedFeedStr = buildPatchedRSS(url.toString(), feed);
 
   return c.text(patchedFeedStr, 200, {
-    "content-type": "application/rss+xml",
+    "content-type": contentType,
     "cache-control": "public, s-maxage=60",
   });
 });
