@@ -9,12 +9,7 @@ const app = new Hono();
 const port = Number(process.env.PORT || 3000);
 const patchRssHost = process.env.PATCHRSS_HOST || "localhost:3000";
 
-const rssParser = new RSSParser({
-  timeout: Number(process.env.RSS_PARSER_TIMEOUT_MSEC || 5000),
-  headers: {
-    "user-agent": "patchrss (+https://blog.utgw.net/entry/patchrss)",
-  },
-});
+const rssParser = new RSSParser();
 
 const defaultErrorHeaders = {
   "cache-control": "public, s-maxage=60",
